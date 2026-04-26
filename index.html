@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scalable Thread Management Simulator - Professional OS Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-icon">⚙️</span>
+                <span class="logo-text">ThreadOS</span>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-section="dashboard">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" data-section="threads">
+                <span class="nav-icon">🧵</span>
+                <span class="nav-label">Thread Manager</span>
+            </a>
+            <a href="#" class="nav-item" data-section="simulation">
+                <span class="nav-icon">▶️</span>
+                <span class="nav-label">Simulation</span>
+            </a>
+            <a href="#" class="nav-item" data-section="analytics">
+                <span class="nav-icon">📈</span>
+                <span class="nav-label">Analytics</span>
+            </a>
+            <a href="#" class="nav-item" data-section="about">
+                <span class="nav-icon">ℹ️</span>
+                <span class="nav-label">About</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <p class="sidebar-version">v1.0.0</p>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-wrapper">
+        <!-- Top Navbar -->
+        <nav class="navbar">
+            <div class="navbar-left">
+                <h1 class="navbar-title">Scalable Thread Management Library Simulator</h1>
+                <p class="navbar-subtitle">Professional OS Scheduler Dashboard</p>
+            </div>
+            <div class="navbar-right">
+                <div class="status-badge">
+                    <span class="status-indicator"></span>
+                    <span id="threadStatusBadge">Ready</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- DASHBOARD SECTION -->
+            <section id="dashboard-section" class="section active">
+                <div class="section-header">
+                    <h2>Dashboard Overview</h2>
+                    <p>System statistics and quick actions</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Statistics Cards -->
+                    <div class="stat-card">
+                        <div class="stat-icon">🧵</div>
+                        <div class="stat-content">
+                            <span class="stat-label">Total Threads</span>
+                            <span class="stat-value" id="statThreadCount">0</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-content">
+                            <span class="stat-label">Avg Waiting Time</span>
+                            <span class="stat-value" id="statAvgWait">-</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-content">
+                            <span class="stat-label">Avg Turnaround</span>
+                            <span class="stat-value" id="statAvgTAT">-</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">⚡</div>
+                        <div class="stat-content">
+                            <span class="stat-label">Last Algorithm</span>
+                            <span class="stat-value" id="statLastAlgo">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h3>Quick Actions</h3>
+                    <div class="action-buttons">
+                        <button class="action-btn" id="quickAddBtn">
+                            <span>➕</span> Add Thread
+                        </button>
+                        <button class="action-btn" id="quickBulkBtn">
+                            <span>🎲</span> Generate Random
+                        </button>
+                        <button class="action-btn" id="quickSimulateBtn">
+                            <span>▶️</span> Run Simulation
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Simulations -->
+                <div class="recent-simulations">
+                    <h3>Recent Simulations</h3>
+                    <div id="recentSimsList" class="simulations-list">
+                        <p class="empty-state">No simulations yet</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- THREAD MANAGER SECTION -->
+            <section id="threads-section" class="section">
+                <div class="section-header">
+                    <h2>Thread Manager</h2>
+                    <p>Create and manage system threads</p>
+                </div>
+
+                <div class="manager-layout">
+                    <!-- Add Thread Form -->
+                    <div class="form-card">
+                        <h3>Add New Thread</h3>
+                        <form id="addThreadForm" class="thread-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="threadId">Thread ID</label>
+                                    <input type="text" id="threadId" placeholder="T1, T2, P1..." class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label for="arrivalTime">Arrival Time</label>
+                                    <input type="number" id="arrivalTime" min="0" placeholder="0" class="form-input" value="0">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="burstTime">Burst Time</label>
+                                    <input type="number" id="burstTime" min="1" max="1000" placeholder="5" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label for="priority">Priority</label>
+                                    <input type="number" id="priority" min="0" max="5" placeholder="0" class="form-input" value="0">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <span>➕</span> Add Thread
+                            </button>
+                        </form>
+
+                        <div class="divider"></div>
+
+                        <h3>Bulk Operations</h3>
+                        <button type="button" id="generateRandomBtn" class="btn btn-secondary btn-block">
+                            <span>🎲</span> Generate Random Threads
+                        </button>
+                        <button type="button" id="clearThreadsBtn" class="btn btn-danger btn-block">
+                            <span>🗑️</span> Clear All
+                        </button>
+                    </div>
+
+                    <!-- Threads List -->
+                    <div class="threads-card">
+                        <h3>Active Threads (<span id="threadCountBadge">0</span>)</h3>
+                        <div class="threads-list-container">
+                            <div class="table-responsive">
+                                <table class="threads-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Arrival</th>
+                                            <th>Burst</th>
+                                            <th>Priority</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="threadsTableBody">
+                                        <tr class="empty-row">
+                                            <td colspan="5">No threads added yet</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SIMULATION SECTION -->
+            <section id="simulation-section" class="section">
+                <div class="section-header">
+                    <h2>Simulation & Visualization</h2>
+                    <p>Run and visualize scheduling algorithms</p>
+                </div>
+
+                <div class="simulation-grid">
+                    <!-- Configuration Panel -->
+                    <div class="config-panel">
+                        <h3>Simulation Config</h3>
+
+                        <div class="config-section">
+                            <label>Select Algorithm</label>
+                            <div class="algorithm-selector">
+                                <button type="button" class="algo-btn" data-algo="fcfs">
+                                    <span class="algo-icon">1️⃣</span>
+                                    <span class="algo-name">FCFS</span>
+                                </button>
+                                <button type="button" class="algo-btn" data-algo="sjf">
+                                    <span class="algo-icon">✂️</span>
+                                    <span class="algo-name">SJF</span>
+                                </button>
+                                <button type="button" class="algo-btn" data-algo="priority">
+                                    <span class="algo-icon">🔝</span>
+                                    <span class="algo-name">Priority</span>
+                                </button>
+                                <button type="button" class="algo-btn" data-algo="round-robin">
+                                    <span class="algo-icon">🔄</span>
+                                    <span class="algo-name">Round Robin</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="config-section" id="timeQuantumSection" style="display: none;">
+                            <label for="timeQuantum">Time Quantum</label>
+                            <input type="number" id="timeQuantum" min="1" max="100" value="2" class="form-input">
+                        </div>
+
+                        <div class="config-section">
+                            <label>Comparison Mode</label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="comparisonMode">
+                                <span>Compare all algorithms</span>
+                            </label>
+                        </div>
+
+                        <button type="button" id="runSimulationBtn" class="btn btn-success btn-block">
+                            <span>▶️</span> Run Simulation
+                        </button>
+                    </div>
+
+                    <!-- Visualization Panel -->
+                    <div class="visualization-panel">
+                        <h3>Gantt Chart Visualization</h3>
+                        <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                            <div class="spinner"></div>
+                            <p>Running simulation...</p>
+                        </div>
+                        <div id="ganttChartContainer" class="gantt-chart-container" style="display: none;">
+                            <div class="gantt-timeline">
+                                <div id="ganttChart" class="gantt-chart"></div>
+                            </div>
+                            <div class="timeline-controls">
+                                <button type="button" id="playBtn" class="control-btn" title="Play">
+                                    <span>▶️</span>
+                                </button>
+                                <button type="button" id="pauseBtn" class="control-btn" title="Pause">
+                                    <span>⏸️</span>
+                                </button>
+                                <button type="button" id="resetBtn" class="control-btn" title="Reset">
+                                    <span>↻</span>
+                                </button>
+                                <div class="progress-bar">
+                                    <div id="progressFill" class="progress-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="noSimulationMsg" class="empty-state">
+                            <p>👉 Select an algorithm and run simulation to see visualization</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Execution Sequence -->
+                <div class="execution-sequence-panel">
+                    <h3>Execution Sequence</h3>
+                    <div id="executionSequence" class="execution-sequence">
+                        <p class="empty-state">Run a simulation to see execution order</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ANALYTICS SECTION -->
+            <section id="analytics-section" class="section">
+                <div class="section-header">
+                    <h2>Performance Analytics</h2>
+                    <p>Detailed metrics and algorithm comparison</p>
+                </div>
+
+                <!-- Metrics Panel -->
+                <div class="metrics-panel">
+                    <h3>Simulation Metrics</h3>
+                    <div id="metricsContent" class="empty-state">
+                        <p>Run a simulation to view metrics</p>
+                    </div>
+                </div>
+
+                <!-- Detailed Metrics Table -->
+                <div class="analytics-table-panel">
+                    <h3>Thread Metrics</h3>
+                    <div class="table-responsive">
+                        <table id="metricsTable" class="analytics-table" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th>Thread ID</th>
+                                    <th>Arrival</th>
+                                    <th>Burst</th>
+                                    <th>Waiting Time</th>
+                                    <th>Turnaround Time</th>
+                                    <th>Response Time</th>
+                                </tr>
+                            </thead>
+                            <tbody id="metricsTableBody">
+                            </tbody>
+                        </table>
+                        <div id="noMetricsMsg" class="empty-state">
+                            <p>No metrics available yet</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparison Table -->
+                <div class="comparison-panel" id="comparisonPanel" style="display: none;">
+                    <h3>Algorithm Comparison</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                        <!-- Comparison Chart -->
+                        <div style="background: rgba(0, 217, 255, 0.05); border: 1px solid rgba(0, 217, 255, 0.2); border-radius: 12px; padding: 1.5rem;">
+                            <h4 style="color: var(--bright-cyan); margin-bottom: 1rem; font-size: 0.95rem;">Waiting Time Comparison</h4>
+                            <canvas id="waitingTimeChart"></canvas>
+                        </div>
+                        
+                        <!-- Turnaround Chart -->
+                        <div style="background: rgba(0, 217, 255, 0.05); border: 1px solid rgba(0, 217, 255, 0.2); border-radius: 12px; padding: 1.5rem;">
+                            <h4 style="color: var(--bright-cyan); margin-bottom: 1rem; font-size: 0.95rem;">Turnaround Time Comparison</h4>
+                            <canvas id="turnaroundTimeChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Comparison Table -->
+                    <div class="table-responsive">
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Algorithm</th>
+                                    <th>Avg Waiting Time</th>
+                                    <th>Avg Turnaround Time</th>
+                                    <th>Avg Response Time</th>
+                                </tr>
+                            </thead>
+                            <tbody id="comparisonTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABOUT SECTION -->
+            <section id="about-section" class="section">
+                <div class="section-header">
+                    <h2>About This Project</h2>
+                    <p>University-level Operating Systems Project</p>
+                </div>
+
+                <div class="about-grid">
+                    <div class="about-card">
+                        <h3>📚 Project Overview</h3>
+                        <p>
+                            This is a comprehensive thread management simulator demonstrating CPU scheduling algorithms 
+                            at a professional level. It combines real-time visualization with accurate algorithmic implementation.
+                        </p>
+                    </div>
+
+                    <div class="about-card">
+                        <h3>🧠 Algorithms Implemented</h3>
+                        <ul>
+                            <li><strong>FCFS:</strong> First Come First Serve</li>
+                            <li><strong>SJF:</strong> Shortest Job First</li>
+                            <li><strong>Priority:</strong> Non-preemptive Priority Scheduling</li>
+                            <li><strong>Round Robin:</strong> Time quantum-based scheduling</li>
+                        </ul>
+                    </div>
+
+                    <div class="about-card">
+                        <h3>⚙️ Technical Stack</h3>
+                        <ul>
+                            <li>Frontend: HTML5, CSS3, Vanilla JavaScript</li>
+                            <li>Backend: Node.js + Express</li>
+                            <li>Design: Glassmorphism + Modern UI/UX</li>
+                            <li>Features: Real-time animation, comparison mode</li>
+                        </ul>
+                    </div>
+
+                    <div class="about-card">
+                        <h3>📊 Metrics Calculated</h3>
+                        <ul>
+                            <li><strong>Waiting Time:</strong> Time thread waits for CPU</li>
+                            <li><strong>Turnaround Time:</strong> Completion time - Arrival time</li>
+                            <li><strong>Response Time:</strong> First execution - Arrival time</li>
+                        </ul>
+                    </div>
+
+                    <div class="about-card">
+                        <h3>🎯 Test Case Example</h3>
+                        <pre><code>T1: AT=0, BT=5, Priority=1
+T2: AT=1, BT=3, Priority=2
+T3: AT=2, BT=1, Priority=3
+
+FCFS: T1(0-5) → T2(5-8) → T3(8-9)
+SJF:  T1(0-5) → T3(5-6) → T2(6-9)
+Priority: T1(0-5) → T2(5-8) → T3(8-9)</code></pre>
+                    </div>
+
+                    <div class="about-card">
+                        <h3>🚀 Features</h3>
+                        <ul>
+                            <li>✅ Add/Edit/Delete threads</li>
+                            <li>✅ Bulk random generation</li>
+                            <li>✅ Real-time animation</li>
+                            <li>✅ Algorithm comparison</li>
+                            <li>✅ Handles 100+ threads</li>
+                            <li>✅ Professional dashboard UI</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Color Legend Modal -->
+    <div id="legendModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Color Legend</h3>
+                <button type="button" class="modal-close" id="closeLegendBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="colorLegend" class="color-legend"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
